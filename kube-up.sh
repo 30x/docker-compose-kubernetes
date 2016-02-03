@@ -18,6 +18,10 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
+# Ensure Calico CNI plugin is installed.
+cd "$this_dir/scripts"
+./install-calico-cni.sh
+
 cd "$this_dir/kubernetes"
 docker-compose up -d
 
