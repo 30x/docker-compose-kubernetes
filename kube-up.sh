@@ -19,13 +19,15 @@ if [ $? != 0 ]; then
 fi
 
 # Ensure Calico CNI plugin is installed.
-cd "$this_dir/scripts"
+pushd "$this_dir/scripts"
 ./install-calico-cni.sh
+popd
 
-cd "$this_dir/kubernetes"
+pushd "$this_dir/kubernetes"
 docker-compose up -d
+popd
 
-cd "$this_dir/scripts"
+pushd "$this_dir/scripts"
 
 source port-config.sh
 source docker-machine-port-forwarding.sh
@@ -36,3 +38,5 @@ forward_port_if_not_forwarded $REGISTRY_PORT
 ./create-kube-system-namespace.sh
 ./activate-dns.sh
 ./activate-kube-ui.sh
+
+popd
