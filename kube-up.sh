@@ -18,7 +18,23 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
+# Ensure Calico CNI plugin is installed.  If running locally, just 
+# run the install script.  Otherwise, we need to scp it to the 
+# docker machine and run it there.
+if [[ -z "$DOCKER_MACHINE_NAME" ]]; then
+	# Running locally - just run the script.
+  	cd "$this_dir/scripts"
+  	./install-calico-cni.sh
+else
+	# Copy script to docker-machine and run.
+	docker-machine scp $this_dir/scripts/install-calico-cni.sh $DOCKER_MACHINE_NAME:/home
+	docker-machine ssh /home/install-calico-cni.sh
+fi
+
 cd "$this_dir/kubernetes"
+docker-compose up -d
+
+cd "$this_dir/calico"
 docker-compose up -d
 
 cd "$this_dir/scripts"

@@ -1,0 +1,21 @@
+calico-ctl:
+  image: calico/ctl
+  net: host
+  command: node --runtime=none
+  restart: on-failure 
+  privileged: true
+  env_file: calico-compose.env
+
+calico-node:
+  image: calico/node:v0.15.0
+  container_name: calico-node
+  net: host
+  privileged: true
+  restart: always
+  env_file: calico-compose.env
+  environment:
+  - FELIX_ETCDADDR=127.0.0.1:4001
+  - FELIX_ETCDSCHEME=http
+  volumes:
+  - /var/run/calico:/var/run/calico:rw
+  - /var/log/calico:/var/log/calico:rw
