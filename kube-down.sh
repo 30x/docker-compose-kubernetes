@@ -19,6 +19,14 @@ if [ ! -z "$(docker-compose ps -q)" ]; then
     docker-compose rm -f -v
 fi
 
+cd "$this_dir/calico"
+
+if [ ! -z "$(docker-compose ps -q)" ]; then
+    docker-compose stop
+    docker-compose rm -f -v
+fi
+
+
 k8s_containers=`docker ps -a -f "name=k8s_" -q`
 
 if [ ! -z "$k8s_containers" ]; then
